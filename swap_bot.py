@@ -2,9 +2,11 @@ import sys, time, os
 from Class.token import Erc20Token
 
 from decimal import Decimal
-from dotenv import *
+from dotenv import load_dotenv
 from brownie import accounts
 
+
+load_dotenv()
 
 BROWNIE_ACCOUNT = os.getenv("BROWNIE_ACCOUNT")
 BROWNIE_NETWORK = "moralis-ftm-main"
