@@ -1,16 +1,20 @@
 import sys, time, os
+import brownie
 from Class.token import Erc20Token
-
+from Class.router import Router
+from Class.liquiditypool import LiquidityPool
+from Class.text_msgs import email_alert
 from decimal import Decimal
 from dotenv import load_dotenv
-from brownie import accounts
 
 
 load_dotenv()
 
-BROWNIE_ACCOUNT = os.getenv("BROWNIE_ACCOUNT")
-BROWNIE_NETWORK = "moralis-ftm-main"
-FTMSCAN_API_KEY = str(os.getenv("FTMSCAN_API_KEY"))
+BROWNIE_USERNAME = os.getenv("BROWNIE_USERNAME")
+BROWNIE_PASSWORD = os.getenv("BROWNIE_PASSWORD")
+BROWNIE_ACCOUNT = (BROWNIE_USERNAME, BROWNIE_PASSWORD)
+BROWNIE_FTM_NETWORK = os.getenv("BROWNIE_FTM_NETWORK")
+FTMSCAN_API_KEY = os.getenv("FTMSCAN_API_KEY")
 os.environ["FTMSCAN_TOKEN"] = FTMSCAN_API_KEY
 
 EMAIL = os.getenv("EMAIL")
@@ -26,24 +30,24 @@ TOMB_CONTRACT_ADDRESS = "0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7"
 SLIPPAGE = Decimal("0.001")  # optional tolerated slippage in swap price (0.1%)
 
 # Simulate swaps and approvals
-DRY_RUN = True
+DRY_RUN = False
 # Quit after the first successful trade
 ONE_SHOT = False
 # How often to run the main loop (in seconds)
-LOOP_TIME = 0.25
+LOOP_TIME = 0.5
 
 
 def main():
 
     try:
-        network.connect(BROWNIE_NETWORK)
+        brownie.network.connect(BROWNIE_FTM_NETWORK)
     except:
         sys.exit(
             "Could not connect! Verify your Brownie network settings using 'brownie networks list'"
         )
 
     try:
-        cryptobot = accounts.load(BROWNIE_ACCOUNT)
+        cryptobot = brownie.accounts.load(BROWNIE_USERNAME, password=BROWNIE_PASSWORD)
     except:
         sys.exit(
             "Could not load account! Verify your Brownie account settings using 'brownie accounts list'"
@@ -107,14 +111,14 @@ def main():
         lp.set_swap_target(
             token_in_qty=1,
             token_in=tomb,
-            token_out_qty=1.012,
+            token_out_qty=1.01,
             token_out=wftm,
         )
 
         lp.set_swap_target(
             token_in_qty=1,
             token_in=wftm,
-            token_out_qty=1.008,
+            token_out_qty=1.01,
             token_out=tomb,
         )
 
@@ -127,11 +131,11 @@ def main():
     while True:
 
         try:
-            if network.is_connected():
+            if brownie.network.is_connected():
                 pass
             else:
                 print("Network connection lost! Reconnecting...")
-                if network.connect(BROWNIE_NETWORK):
+                if brownie.network.connect(BROWNIE_FTM_NETWORK):
                     pass
                 else:
                     time.sleep(5)
