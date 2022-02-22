@@ -2,8 +2,8 @@ import datetime
 import json
 import brownie
 from decimal import Decimal
-from .token import Erc20Token
-from .router import Router
+from Class.token import Erc20Token
+from Class.router import Router
 
 
 class LiquidityPool:

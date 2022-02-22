@@ -1,8 +1,9 @@
 import sys, time, os
-from .Class.token import Erc20Token
+from Class.token import Erc20Token
+
 from decimal import Decimal
 from dotenv import *
-from .brownie import accounts
+from brownie import accounts
 
 
 BROWNIE_ACCOUNT = os.getenv("BROWNIE_ACCOUNT")

@@ -1,4 +1,4 @@
-from brownie.
+import brownie
 
 
 class ChainlinkPriceContract:
